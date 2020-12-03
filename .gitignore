@@ -14,3 +14,4 @@
 !/etc/**
 !.zshrc
 !.gitignore
+!README.md
