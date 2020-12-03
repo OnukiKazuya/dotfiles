@@ -1,5 +1,6 @@
 *
 
-!/etc/install.sh
+#/etc/ 下以降を全て許可
+!/etc/**
 !.zshrc
 !.gitignore
