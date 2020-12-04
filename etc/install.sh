@@ -460,6 +460,52 @@ dotfiles_logo='
 
 # if [ -p hoge ]; then
 ## は、-p file = fileが存在し、パイプファイルの場合はTRUE
-# test
+dotfiles_download() {
+  if [ -d "$DOTPATH" ]; then
+    log_fail "$DOTPATH : already exists"
+    exit 1
+  fi
 
+  e_newline
+  e_header "Downloading dotfiles..."
+  
+  if is_debug; then
+    :
+  else
+    if is_exists "git"; then
+      # --recursive　は サブモジュール自動クローン（外部リポジトリを自動クローン）
+      # dein.nvim等のplugin追加時、外部リポジトリを指定している時に便利
+      git clone --recursive "$DOTFILES_GITHUB" "$DOTPATH"
+    
+    elif is_exists "curl" || is_exists "wget"; then
+      # curl or wget
+      local tarball="https://github.com/OnukiKazuya/dotfiles/archive/main.tar.gz"
+      if is_exists "curl"; then
+        curl -L "$tarball"
+      elif is_exists "wget"; then 
+        wget -0 - "$tarball"
+      fi | tar xvf
 
+      # ./dotfile-main　dir
+      if [ ! -d dotfiles-main ]; then
+        log_fail "dotfiles-main: not found"
+        exit 1
+      fi
+      
+      # commandコマンドで内部で定義したエイリアスや関数を【無視して】
+      # 環境変数PATHに通っているコマンドのみを実行できるようにする
+      command mv -f dotfiles-main "$DOTPATH"
+    
+    else
+      log_fail "curl or wget required"
+      exit 1
+    fi
+    e_newline && e_done "Download"
+}
+
+dotfiles_deploy() {
+}
+dotfiles_initialize() {
+}
+dotfiles_install(){
+}
