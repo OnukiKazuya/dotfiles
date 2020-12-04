@@ -440,5 +440,26 @@ fi
 
 DOTFILES_GITHUB="https://github.com/hoge/dotfiles.git"; export DOTFILES_GITHUB
 
+# shellcheck disable=SC1078,SC1079,SC2016
+dotfiles_logo='
+      | |     | |  / _(_) |           
+    __| | ___ | |_| |_ _| | ___  ___  
+   / _` |/ _ \| __|  _| | |/ _ \/ __| 
+  | (_| | (_) | |_| | | | |  __/\__ \ 
+   \__,_|\___/ \__|_| |_|_|\___||___/ 
+  *** WHAT IS INSIDE? ***
+  1. Download https://github.com/OnukiKazuya/dotfiles
+  2. Symlinking dot files to your home directory
+  3. Execute all sh files within `etc/init/` (optional)
+  See the README for documentation.
+  https://github.com/OnukiKazuya/dotfiles
+  Copyright (c) 2020 "OnukiKazuya" aka @OnukiKazuya
+  Licensed under the MIT license.
+'
+
+
+# if [ -p hoge ]; then
+## は、-p file = fileが存在し、パイプファイルの場合はTRUE
+# test
 
 
