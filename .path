@@ -1,0 +1,53 @@
+#!/bin/zsh
+
+# readlink emulates GNU readlink -f option
+readlink() {
+  if [ $# -eq 0 ]; then
+    return 1
+  fi
+
+  # change directory and reset file
+  file="$1"
+  # $(dirname パス名) : パス名から、ディレクトリを抽出
+  cd "$(dirname "$file")"
+  # $basename : パス名から、末尾を抽出
+  file="$(basename "$file")"
+  
+  # recursively
+  while [ -L "$file" ]; do
+    # read link
+    file="$(command readlink "$file")"
+    cd "$(dirname "$file")"
+    file="$(basename "$file")"
+  done
+ 
+  # real pwd
+  ## pwd -L : シンボリックリンクの場合そのままポインタとして表示
+  ## pwd -P : シンボリックリンク（ポインタ）が指し示す先を表示
+  phys="$(pwd -P)"
+  result="$phys/$file"
+
+  # puts
+  echo "$result"
+}
+
+# get dotpath as full path
+## $0 : 起動中のシェルスクリプト名を示す
+echo "$ 0 : $0"
+dotpath="$(dirname "$(readlink "$0")")"
+echo "$ dotpath : $dotpath"
+
+# check if the current shell is run with the interactive mode
+## $- : 実行したときに指定したオプションの種類を提示する
+if echo "$-" | grep -q "i"; then  
+  # -> source a.sh (this is interactive)
+  DOTPATH="$dotpath"
+  export DOTPATH
+else
+  # puts
+  if [ "$0" = "${BASH_SOURCE:-}" ]; then
+    # -> bash a.sh (this is bash exec)
+    echo "$dotpath"
+  fi
+fi
+
