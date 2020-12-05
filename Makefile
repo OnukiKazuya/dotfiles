@@ -1,4 +1,5 @@
 # $MAKEFILE_LIST : makeが読んだファイルリスト
+### includeさレル旅にファイルの名前がMAKE_FILE_LISTに追加される
 # $(realpath NAMES...) : NAMESの各要素の絶対パスを取得する#### abspathとは異なり、ファイルやディレクトリが存在するもののみ取得する
 # $(dir NAMES...) : NAMES内の各要素のディレクトリを返す
 # $(lastword NAMES...) : NAMES内の最後の要素を取得
