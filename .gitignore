@@ -16,3 +16,4 @@
 !.gitignore
 !README.md
 !Makefile
+!/doc/**
