@@ -18,3 +18,5 @@
 !Makefile
 !/doc/**
 !.path
+!.curlrc
+!.tigrc
