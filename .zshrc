@@ -112,21 +112,7 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # LS
 export LSCOLORS=exfxcxdxbxegedabagacad
 
-# TODO : zplugを導入することにした（antigenは、古くて遅いらしい）
-zplug_plugins=(
-"b4b4r07/enhancd"
-"b4b4r07/zsh-vimode-visual"
-"brew"
-"hchbaw/opp.zsh", do:"__zsh_version 5.0.8"           # surroud.vimライクなやつ 5.0.8以前なら有用それ以降は標準にある
-"zsh-users/zsh-completions"                          # 補完ファイル 
-"zsh-users/zsh-history-substring-search"             # zshのヒストリーサーチを便利にするやつ
-"zsh-users/zsh-syntax-highlighting", defer:2         # compinit以降に読まないといけないので、優先度を低くした(defer:2) : zshのコマンドラインに色付けをするやつ
-"junegunn/fzf-bin", as:command, from:gh-r, file:fzf  # fzf-binにホスティングされているので注意#またファイル名がfzf-binとなっているのでfile:fzfとしてリネームする
-"junegunn/fzf", as:command, of:bin/fzf-tmux          # ついでにtmux用の拡張も入れるとよい
-"peco/peco", as:command, from:gh-r                   # NOTE : これが何かまだわかっていない
-'zplug/zplug', hook-build:'zplug --self-manage'      # zplug自身をマネージドさせる(おすすめらしい,なぜ）
 
-)
 
 setup_bundles() {
     echo "$fg[blue]Starting $SHELL....$reset_color"
@@ -152,10 +138,12 @@ setup_bundles() {
             return 1
         fi
 
-        curl -fLo ~/.zplug/zplug --create-dirs git.io/zplug
-
+        curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh        
+  
+        # TODO : なぜかインストール後に、下の関数で、zplugがないと判断されるため、一度、シェル再起動することにする
         # run bundles
-        bundles
+        # bundles
+        exec $SHELL -l  # login shell 起動
     }
 
     # bundles checks if antigen plugins are valid and available
@@ -167,16 +155,22 @@ setup_bundles() {
             # load antigen
             source ~/.zplug/init.zsh
 
-            # check plugins installed by antigen
-            for p in ${zplug_plugins[@]}
-            do
-                echo "checking... $p" | e_indent 2
-                zplug "$p"
-            done
+            # TODO : zplugを導入することにした（antigenは、古くて遅いらしい）
+	    zplug "b4b4r07/enhancd"
+	    zplug "b4b4r07/zsh-vimode-visual"
+            zplug "brew"
+	    zplug "hchbaw/opp.zsh", hook-build:"__zsh_version 5.0.8"          # surroud.vimライクなやつ 5.0.8以前なら有用それ以降は標準にある
+	    zplug "zsh-users/zsh-completions"                                 # 補完ファイル 
+	    zplug "zsh-users/zsh-history-substring-search"                    # zshのヒストリーサーチを便利にするやつ
+	    zplug "zsh-users/zsh-syntax-highlighting", defer:2                # compinit以降に読まないといけないので、優先度を低くした(defer:2) : zshのコマンドラインに色付けをするやつ
+	    zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf    # fzf-binにホスティングされているので注意#またファイル名がfzf-binとなっているのでfile:fzfとしてリネームする
+	    zplug "junegunn/fzf", as:command, use:bin/fzf-tmux                # ついでにtmux用の拡張も入れるとよい
+	    zplug "peco/peco", as:command, from:gh-r                          # NOTE : これが何かまだわかっていない
+	    zplug "zplug/zplug", hook-build:"zplug --self-manage"               # zplug自身をマネージドさせる(おすすめらしい,なぜ）
 
             # apply zplug
             if ! zplug check --verbose; then
-		printf "Install? [y/N]: "
+		printf "Original zplug plugin Install? [y/N]: "
 		if read -q; then
 		  echo; zplug install
 		fi
