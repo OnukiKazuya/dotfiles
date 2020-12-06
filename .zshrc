@@ -734,8 +734,32 @@ zshrc_alias() {
 
     alias vi="vim"
 
-    # Use plain vim.
-    alias nvim='vim -N -u NONE -i NONE'
+	# TODO : NVIM Install or not {{{
+    if has "nvim"; then
+      export XDG_CONFIG_HOME=$HOME/dotfiles
+	  if ! [ -d "$XDG_CONFIG_HOME/.vim/dein/Shougo/dein.vim" ]; then
+		  mkdir -p "$XDG_CONFIG_HOME/.vim/dein/Shougo/dein.vim"
+		  if has "git"; then
+			  echo "cloneing /Shougo/dein.vim..."
+			  git clone git@github.com:Shougo/dein.vim.git $XDG_CONFIG_HOME/.vim/dein/Shougo/dein.vim
+		  else
+			  e_error "must install git"
+			  exit
+		  fi
+	  fi
+      alias vi="nvim"  # NOTE : viエイリアスを上書き 
+    else
+      echo "Install NVIM? [y/N] : "  
+      # Use plain vim.
+      if read -q; then
+        echo; brew install neovim
+        export XDG_CONFIG_HOME=$HOME/dotfiles
+		exec $SHELL -l  # シェルを再起動する
+      else
+        alias nvim='vim -N -u NONE -i NONE'
+      fi
+    fi
+	# }}}
 
     # The first word of each simple command, if unquoted, is checked to see 
     # if it has an alias. [...] If the last character of the alias value is 
