@@ -1,0 +1,3 @@
+[submodule ".vim/dein/Shougo/dein.vim"]
+	path = .vim/dein/Shougo/dein.vim
+	url = https://github.com/OnukiKazuya/dotfiles.git
