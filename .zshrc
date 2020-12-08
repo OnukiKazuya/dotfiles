@@ -1,7 +1,9 @@
 alias ide="~/bin/ide.sh"
 #tmux
-
-#
+####
+## tmux.confを読み込む処理（結構大事）
+tmux source-file ~/.tmux.conf
+#####
 #          _              
 #  _______| |__  _ __ ___ 
 # |_  / __| '_ \| '__/ __|
@@ -21,6 +23,9 @@ limit coredumpsize 0
 # NOTE : -dオプションで【一旦全バインドキーを削除】
 bindkey -d
 
+
+
+
 # NOTE: set fpath before compinit
 # NOTE : fpathは補完関数のありかを示す（zstyleで一緒に使う）
 #fpath=(~/.zsh/Completion(N-/) $fpath)
@@ -36,7 +41,7 @@ autoload -Uz colors; colors
 autoload -Uz compinit; compinit -u
 autoload -Uz is-at-least
 autoload -Uz history-search-end
-#autoload -Uz modify-current-argument
+autoload -Uz modify-current-argument
 autoload -Uz smart-insert-last-word
 autoload -Uz terminfo  # TODO : これが何をするか調査する必要あり
 autoload -Uz vcs_info  # 取得した情報(git,svn等)をもとにプロンプト表示
@@ -188,6 +193,14 @@ setup_bundles() {
         fi
     }
 
+    if ! [[ -e ~/dotfiles/.vim/bundle/neobundle.vim ]]; then
+        echo "NeoBundle not installe. it is needed for dein.vim plugin. install? [y/N]: "
+        if read -q; then
+          mkdir -p ~/dotfiles/.vim/bundle/neobundle.vim
+          echo; git clone git://github.com/Shougo/neobundle.vim ~/dotfiles/.vim/bundle/neobundle.vim        
+        fi
+    fi
+
     # run bundles
     bundles
 }
@@ -272,6 +285,7 @@ zshrc_keybind() {
     bindkey -M viins 'jj' vi-cmd-mode
 
     # Add emacs-like keybind to viins mode
+    # viins : insert モード
     bindkey -M viins '^F'    forward-char
     bindkey -M viins '^B'    backward-char
     bindkey -M viins '^P'    up-line-or-history
@@ -289,6 +303,7 @@ zshrc_keybind() {
     bindkey -M viins '^G'    send-break
     bindkey -M viins '^D'    delete-char-or-list
 
+    # vicmd : command モード
     bindkey -M vicmd '^A'    beginning-of-line
     bindkey -M vicmd '^E'    end-of-line
     bindkey -M vicmd '^K'    kill-line
