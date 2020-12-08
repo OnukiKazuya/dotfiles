@@ -13,6 +13,7 @@
 #/etc/ 下以降を個別に許可
 !/etc/**
 !.zshrc
+!.vimrc
 !.gitignore
 !README.md
 !Makefile
